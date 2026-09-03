@@ -1,0 +1,15 @@
+{
+	"name": "spotify-manoj-adf",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "19ee4172-fc95-422a-ab32-d77881e32e0f",
+		"tenantId": "05bea1ae-cb4b-4138-ab1e-bd521210076c"
+	}
+}
