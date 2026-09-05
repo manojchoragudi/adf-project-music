@@ -43,7 +43,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "SELECT * FROM @{item().schema}.@{item().table} WHERE @{item().cdc_col}>\n\n'@{if(empty(item().from_date),activity('last_cdc').output.value[0].cdc,item().from_date)}'",
+										"value": "SELECT * FROM @{item().schema}.@{item().table} WHERE @{item().cdc_column}>\n\n'@{if(empty(item().from_date),activity('last_cdc').output.value[0].cdc,item().from_date)}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -81,7 +81,7 @@
 									"parameters": {
 										"conatiner": "bronze",
 										"folder": {
-											"value": "@item().table",
+											"value": "@{item().table}",
 											"type": "Expression"
 										},
 										"file": {
@@ -122,7 +122,7 @@
 									"parameters": {
 										"container": "bronze",
 										"folder": {
-											"value": "@item().name_cdc",
+											"value": "@{item().table}_cdc",
 											"type": "Expression"
 										},
 										"file": {
@@ -279,7 +279,7 @@
 												"parameters": {
 													"container": "bronze",
 													"folder": {
-														"value": "@{item()}_cdc",
+														"value": "@{item().table}",
 														"type": "Expression"
 													},
 													"file": "cdc.json"
@@ -308,7 +308,7 @@
 												{
 													"type": "Query",
 													"text": {
-														"value": "select MAX (@{item().cdc_col}) as cdc FROM @{item().schema}. @{item().table}",
+														"value": "select MAX (@{item().cdc_column}) as cdc FROM @{item().schema}. @{item().table}",
 														"type": "Expression"
 													}
 												}
@@ -320,6 +320,36 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "alerts",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed",
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-29.northcentralus.logic.azure.com:443/workflows/1a308c95960348668e4cbe91b7df235c/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=QMHOtVsysDeqTVf2eLr6lOTDWy7_EB4-HoDOE8NqHB4",
+					"body": {
+						"value": "{\n    \"pipeline_name\" : \"@{pipeline().Pipeline}\",\n    \"pipeline_runId\": \"@{pipeline().RunId}\"\n}",
+						"type": "Expression"
+					}
 				}
 			}
 		],
@@ -354,7 +384,7 @@
 					{
 						"schema": "dbo",
 						"table": "FactStream",
-						"cdc_column": "updated_at",
+						"cdc_column": "stream_timestamp",
 						"from_date": ""
 					}
 				]
