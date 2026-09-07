@@ -1,0 +1,21 @@
+bundle:
+  name: spotify_dab
+  uuid: 844c073d-0136-4c9e-a5a8-22500cc3ad24
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405616277779131.11.azuredatabricks.net
+    presets:
+      source_linked_deployment: false
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405616277779131.11.azuredatabricks.net
+      root_path: /Workspace/PROD.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: manojoct1@outlook.com
+        level: CAN_MANAGE
