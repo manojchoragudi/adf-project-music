@@ -143,12 +143,12 @@ The project follows a layered cloud data engineering architecture using **Azure 
                     │  Copy Activity               │
                     │  If Condition                │
                     │  Script Activity             │
-                    │  Dynamic Datasets             │
+                    │  Dynamic Datasets            │
                     └──────────────┬───────────────┘
                                    │
                                    ▼
                     ┌──────────────────────────────┐
-                    │     Azure Data Lake Storage   │
+                    │     Azure Data Lake Storage  │
                     │                              │
                     │          BRONZE              │
                     │                              │
@@ -158,7 +158,7 @@ The project follows a layered cloud data engineering architecture using **Azure 
                                    │
                                    ▼
                     ┌──────────────────────────────┐
-                    │       Azure Databricks        │
+                    │       Azure Databricks       │
                     │                              │
                     │          PySpark             │
                     │          DLT                 │
